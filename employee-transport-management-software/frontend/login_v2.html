@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ARS Travels & Logistics - Login</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#FFB800',
+                        secondary: '#FFC94D',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        /* Previous styles remain the same */
+    </style>
+</head>
+<body class="min-h-screen bg-gradient-to-br from-gray-100 via-white to-gray-100">
+    <!-- Company Name Popup -->
+    <div class="fixed top-0 left-0 w-full bg-primary py-3 shadow-lg z-50 popup">
+        <div class="container mx-auto px-4">
+            <h1 class="text-3xl font-bold text-gray-800 flex items-center justify-center">
+                <i class="fa-solid fa-van-shuttle mr-3 text-gray-800"></i>
+                ARS Travels & Logistics Pvt Ltd
+            </h1>
+            <p class="text-sm text-gray-700 text-center mt-1">Safe and Reliable School Transport Services</p>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="flex items-center justify-center min-h-screen pt-24 pb-32 px-4">
+        <div class="bg-white/90 backdrop-blur-sm p-8 rounded-2xl shadow-2xl w-full max-w-md fade-in relative">
+            <!-- School Transport Illustration -->
+            <div class="text-center mb-8">
+                <div class="text-6xl mb-6 flex justify-center space-x-6">
+                    <i class="fa-solid fa-children text-primary"></i>
+                    <i class="fa-solid fa-van-shuttle text-secondary"></i>
+                    <i class="fa-solid fa-school text-primary"></i>
+                </div>
+                <h2 class="text-3xl font-bold text-gray-800 mb-3">Welcome Back!</h2>
+                <p class="text-gray-600">Login to manage transport services</p>
+            </div>
+
+            <!-- Login Form -->
+            <form id="loginForm" class="space-y-5">
+                <div class="relative group">
+                    <i class="fa-solid fa-id-card absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 group-focus-within:text-primary transition-colors"></i>
+                    <input type="text" 
+                           id="employeeId" 
+                           required 
+                           class="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-all bg-white/80"
+                           placeholder="Employee ID"
+                           autocomplete="off">
+                </div>
+                
+                <div class="relative group">
+                    <i class="fa-solid fa-lock absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 group-focus-within:text-primary transition-colors"></i>
+                    <input type="password" 
+                           id="password" 
+                           required 
+                           class="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-all bg-white/80"
+                           placeholder="Password"
+                           autocomplete="current-password">
+                </div>
+
+                <button type="submit" 
+                        class="w-full bg-primary hover:bg-secondary text-gray-800 font-semibold py-3 px-4 rounded-lg transition-all duration-300 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-opacity-50 flex items-center justify-center shadow-lg">
+                    <i class="fa-solid fa-right-to-bracket mr-2"></i>
+                    Login
+                </button>
+            </form>
+
+            <p class="mt-6 text-center text-gray-600">
+                Don't have an account? 
+                <a href="register.html" class="text-primary hover:text-secondary font-semibold transition-colors">
+                    Register
+                </a>
+            </p>
+        </div>
+    </div>
+
+    <!-- Animated Scene -->
+    <div class="road"></div>
+    <div class="school-van">
+        <div class="van-body">
+            <div class="van-window"></div>
+            <div class="van-window"></div>
+            <div class="van-window"></div>
+        </div>
+        <div class="van-front">
+            <div class="windshield"></div>
+        </div>
+        <div class="wheel front"></div>
+        <div class="wheel back"></div>
+    </div>
+
+    <script>
+        document.getElementById('loginForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const employeeId = document.getElementById('employeeId').value;
+            const password = document.getElementById('password').value;
+
+            try {
+                const response = await fetch('http://localhost:5000/login', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        username: employeeId,
+                        password: password
+                    }),
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    // Store the token and role
+                    localStorage.setItem('token', data.token);
+                    localStorage.setItem('role', data.role);
+                    localStorage.setItem('username', employeeId);
+
+                    // Show success message
+                    alert('Login successful!');
+
+                    // Redirect based on role
+                    window.location.href = 'index.html';
+                } else {
+                    // Show error message
+                    alert(data.message || 'Login failed. Please check your credentials.');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('An error occurred during login. Please try again.');
+            }
+        });
+    </script>
+</body>
+</html>
